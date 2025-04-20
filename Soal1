@@ -1,1 +1,67 @@
-//Kerjakan soal nomor 1 disini (Hapus komentar ini)
+#include <iostream>
+#include <string>
+using namespace std;
+
+bool isDigitOnly(const string& number) {
+    for (char c : number) {
+        if (!isdigit(c)) return false;
+    }
+    return true;
+}
+
+string getCardType(const string& number) {
+    if (number.length() == 14 && number.substr(0, 2) == "65")
+        return "NUSANTARA";
+    else if (number.length() == 16 && 
+            (number.substr(0, 2) == "77" || number.substr(0, 2) == "78"))
+        return "GARUDA";
+    else if (number.length() == 15 && number.substr(0, 2) == "91")
+        return "MERDEKA";
+    return "TIDAK DIKENAL";
+}
+
+bool validasiNusantara(const string& number) {
+    int total = 0;
+    bool doubleIt = false;
+
+    for (int i = number.length() - 1; i >= 0; i--) {
+        int digit = number[i] - '0';
+        if (doubleIt) {
+            digit *= 2;
+            if (digit > 9)
+                digit -= 9;
+        }
+        total += digit;
+        doubleIt = !doubleIt;
+    }
+
+    return total % 10 == 0;
+}
+
+int main() {
+    string nomorKartu;
+    cout << "Masukkan nomor kartu digital: ";
+    cin >> nomorKartu;
+
+    if (!isDigitOnly(nomorKartu)) {
+        cout << "Nomor kartu harus hanya terdiri dari angka!" << endl;
+        return 1;
+    }
+
+    string tipe = getCardType(nomorKartu);
+
+    if (tipe == "TIDAK DIKENAL") {
+        cout << "Jenis kartu tidak dikenali!" << endl;
+        return 1;
+    }
+
+    cout << "Jenis Kartu: " << tipe << endl;
+
+    if (validasiNusantara(nomorKartu)) {
+        cout << "Kartu valid menurut Algoritma Validasi Nusantara." << endl;
+    } else {
+        cout << "Kartu TIDAK valid menurut Algoritma Validasi Nusantara." << endl;
+    }
+
+    return 0;
+}
