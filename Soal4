@@ -1,1 +1,91 @@
-//Kerjakan soal nomor 4 disini (Hapus komentar ini)
+#include <iostream>
+using namespace std;
+
+int main(){
+    int N;
+    string S;
+
+    // Input jumlah babak dalam 1 pertandingan
+    cin>>N; // Membaca karakter yang diinputkan sebagai integer dan menyimpan ke variabel N
+    // Input pemenang setiap babak
+    cin>>S; // Membaca karakter yang diinputkan sebagai string dan menyimpan ke variabel S
+
+    // Menghitung poin sesuai pemain yang menang
+    int poin_A = 0, poin_B = 0, kemenangan_A = 0, kemenangan_B = 0, i;
+    for (i=0; i<N; i++) {
+        char hasil = S[i]; // Memeriksa hasil pemenang pada babak, satu per satu  
+
+        switch (hasil) {
+            case 'A': 
+                poin_A += 3; // Mendapat 3 poin setiap menang dalam satu babak
+                kemenangan_A++; // Menambahkan kemenangan A
+                kemenangan_B = 0; // Reset kemenangan B karena kalah dalam babak ini
+                if (kemenangan_A == 3) { // Jika pemain mendapat kemenangan 3 kali berturut akan mendapat bonus 2 poin
+                    poin_A += 2;
+                    kemenangan_A = 0; // Reset kemenangan agar bonus poin tidak bertambah terus
+                }
+                break;
+            case 'B':
+                poin_B += 3; // Mendapat 3 poin setiap menang dalam satu babak
+                kemenangan_B++; // Menambahkan kemenangan B
+                kemenangan_A = 0; // Reset kemenangan A karena kalah dalam babak ini
+                if (kemenangan_B == 3) { // Jika pemain mendapat kemenangan 3 kali berturut akan mendapat bonus 2 poin
+                    poin_B += 2;
+                    kemenangan_B = 0; // Reset kemenangan agar bonus poin tidak bertambah terus
+                }
+                break;
+            case 'C':
+                // Setiap pemain mendapat poin yang sama, yaitu 1 karena seri
+                poin_A += 1;
+                poin_B += 1;
+                // Reset kemenangan karena tidak ada pemenang di babak ini
+                kemenangan_A = 0;
+                kemenangan_B = 0;
+                break;
+            default: // Jika yang diinputkan pemenang selain A, B, atau C maka akan invalid
+                cout<<"Input tidak valid pada babak ke-"<<i+1<<endl;
+                return 0;
+        }
+    }
+
+    // Output hasil poin
+    cout <<"Poin A: "<<poin_A<<endl;
+    cout <<"Poin B: "<<poin_B<<endl;
+    
+    // Menentukan pemenang atau seri
+    if (poin_A>poin_B) {
+        cout<<"Pemenangnya adalah pemain A"<<endl;
+    }
+    else if (poin_B>poin_A) {
+        cout <<"Pemenangnya adalah pemain B"<<endl;
+    }
+    else {
+        cout<<"Hasil pertandingan Seri!"<<endl;
+    }
+    
+    return 0;
+}
+
+/* Algoritma atau logika penyelesaian
+1. Program mulai dengan menginputkan jumlah babak dalam satu pertandingan. jumlah babak tersebut akan dibaca karakternya
+    sebagai integer dan disimpan ke variabel 'N'
+2. Menginputkan pemenang setiap babak. kemudian pemenang setiap babak akan dibaca karakternya sebagai string dan disimpan
+    ke variabel 'S'
+3. Menghitung poin sesuai pemain yang menang. Melakukan iterasi sebanyak 'N' babak:
+    - Ambil karakter 'hasil' babak ke-i dari 'S'
+    - Jika 'hasil' adalah 'A', tambahkan 3 poin ke pemain A. tambahkan 1 pada 'kemenangan_A'. 'kemenangan_B' direset
+        karena kalah pada babak ini. Jika 'kemenangan_A' = 3 atau berturut-turut menang sebanyak 3 kali, maka tambahkan bonus
+        2 poin ke pemain A. kemudian 'kemenangan_A' direset agar bonus poin tidak bertambah terus
+    - Jika 'hasil' adalah 'B', tambahkan 3 poin ke pemain B. tambahkan 1 pada 'kemenangan_B'. 'kemenangan_A' direset
+        karena kalah pada babak ini. Jika 'kemenangan_B' = 3 atau berturut-turut menang sebanyak 3 kali, maka tambahkan bonus
+        2 poin ke pemain B. kemudian 'kemenangan_B' direset agar bonus poin tidak bertambah terus
+    - Jika 'hasil' adalah 'C', tambahkan 1 poin pada setiap pemain A dan B. 'C' adalah kondisi dimana pertandingan seri.
+        'kemenangan_A' dan 'kemenangan_B' direset karena tidak ada pemenang di babak ini
+    - Jika 'hasil' adalah selain yang disebutkan, maka akan menampilkan output tidak valid pada babak yang tidak benar pada
+        penginputannya (error)
+4. Menampilkan output hasil 'poin_A' dan 'poin_B'
+5. Menentukan pemenang atau seri
+    jika 'poin_A' lebih besar dari 'poin_B' maka akan menampilkan output pemenangnya adalah pemain A
+    jika 'poin_B' lebih besar dari 'poin_A' maka akan menampilkan output pemenangnya adalah pemain B
+    selain dua seleksi di atas, maka akan menampilkan output pertandingan seri
+6. Program selesai */

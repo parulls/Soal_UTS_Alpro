@@ -1,1 +1,170 @@
-//Kerjakan soal nomor 2 disini (Hapus komentar ini)
+#include <iostream>
+using namespace std;
+
+int main() {
+    string kode;
+    int jamKeluar;
+
+    // Input kode parkir
+    cout<<"Masukkan kode parkir digital (10 digit): ";
+    cin>>kode;
+
+    // Menghitung panjang kode secara manual
+    int i=0;
+    while (true) { // Loop terus sampai menemukan karakter akhir string
+        if (kode[i] == '\0') { // Jika karakter null di posisi i adalah null (akhir string)
+        break;
+        }
+        i++; // Jika bukan null, lanjut ke karakter berikutnya
+    }
+
+    // Memeriksa panjang kode parkir (harus 10 digit)
+    int panjang = i;
+    if (panjang != 10) { 
+        cout<<"Kode parkir harus 10 digit!"; 
+        return 0;
+    }
+
+    // Memeriksa apakah kode yang diinput berupa angka (0-9)
+    for (i=0; i<10; i++) {
+        if (kode[i]<'0' || kode[i]>'9') {
+            cout<<"Kode parkir hanya menerima angka.";
+            return 0;
+        }
+    }
+
+    // Memisahkan kode input menjadi tiga bagian
+    string kode_kendaraan, kode_waktu, kode_lokasi;
+    for (i=0; i<2; i++) { //digit 1 dan 2 untuk kode kendaraan
+        kode_kendaraan += kode[i];
+    }
+    for (i=2; i<6; i++) { //digit 3 sampai 6 untuk kode waktu
+        kode_waktu += kode[i];
+    }
+    for (i=6; i<10; i++) { //digit 7 sampai 10 untuk kode nomor lokasi parkir
+        kode_lokasi += kode[i];
+    }
+
+    // Menentukan jenis kendaraan berdasarkan kode kendaraan (digit 1 dan 2)
+    string jenis_kendaraan;
+    if (kode_kendaraan == "10") {
+        jenis_kendaraan = "Mobil";
+    }
+    else if (kode_kendaraan == "20") {
+        jenis_kendaraan = "Motor";
+    }
+    else if (kode_kendaraan == "30") {
+        jenis_kendaraan = "Bus";
+    }
+    else {
+        cout<<"Kode kendaraan tidak valid."<<endl;
+        return 0;
+    }
+
+    // Input jam keluar
+    cout<<"Masukkan jam keluar (format HHMM): ";
+    cin>>jamKeluar;
+
+    // Konversi kode waktu yang tipe data awalnya adalah string menjadi integer
+    int jamMasuk = 0;
+    for (i=0; i<4; i++) {
+        jamMasuk = jamMasuk * 10 + (kode_waktu[i] - '0');
+    }         
+    /* jamMasuk * 10 untuk menggeser angka sebelumnya satu digit ke kiri
+    untuk (kode_waktu[i] - '0') ambil karakter pada indeks i, 
+    lalu kurangi dengan karakter '0' untuk mendapatkan nilai numeriknya */
+    
+    // Mengubah jam masuk dan jam keluar menjadi jam dan menit
+    int jamMasukH = jamMasuk/100; //jam masuk dalam jam
+    int jamMasukM = jamMasuk%100; //jam masuk dalam menit
+    int jamKeluarH = jamKeluar/100; //jam keluar dalam jam
+    int jamkeluarM = jamKeluar%100; //jam keluar dalam menit
+
+    // Memastikan jam masuk dan jam keluar benar
+    if (jamMasukH<0 || jamMasukH>23 || jamMasukM<0 || jamMasukM>59 || jamKeluarH<0 || jamKeluarH>23 || jamkeluarM<0 || jamkeluarM>59) {
+        cout<<"Kode jam masuk atau keluar tidak valid."<<endl;
+        return 0;
+    }
+
+    // Menghitung durasi parkir dalam menit
+    int totalMenit = (jamKeluarH*60 + jamkeluarM) - (jamMasukH*60 + jamMasukM);
+    if (totalMenit<0) {
+        cout<<"Kesalahan menginput jam keluar. Jam keluar lebih awal dari jam masuk"<<endl;
+        return 0;
+    }
+
+    // Menghitung durasi parkir dalam jam bulat ke atas
+    int totalJam = totalMenit/60;
+    if (totalMenit%60 > 0){
+        totalJam += 1;
+    }
+
+    // Menentukan biaya parkir
+    float jamPertama, jamBerikutnya;
+    if (jenis_kendaraan == "Mobil") {
+        jamPertama = 5000;
+        jamBerikutnya = 3000;
+    }
+    else if (jenis_kendaraan == "Motor") {
+        jamPertama = 3000;
+        jamBerikutnya = 2000;
+    }
+    else if (jenis_kendaraan == "Bus") {
+        jamPertama = 10000;
+        jamBerikutnya = 7000;
+    }
+
+    // Menghitung total biaya parkir
+    int totalBiaya = jamPertama;
+    if (totalJam >1) {
+        totalBiaya += ((totalJam-1)*jamBerikutnya);
+    }
+
+    // Output
+    cout<<"\n--- Ringkasan Parkir ---"<<endl;
+    cout<<"Jenis kendaraan: "<<jenis_kendaraan<<endl;
+    cout<<"Waktu masuk: "<<jamMasukH<<":"<<jamMasukM<<endl;
+    cout<<"Waktu keluar: "<<jamKeluarH<<":"<<jamkeluarM<<endl;
+    cout<<"Durasi parkir: "<<totalJam<<" jam"<<endl;
+    cout<<"Lokasi parkir: "<<kode_lokasi<<endl;
+    cout<<"Total biaya: Rp "<<totalBiaya<<endl;
+
+    return 0;
+}
+
+/* Algoritma atau logika penyelesaian
+1. Program mulai dengan menginput kode parkir berupa string 10 digit yang akan disimpan pada variabel 'kode'
+2. Menghitung panjang string 'kode' secara manual dengan loop sampai menemukan karakter akhir string
+3. Jumlah panjang 'kode' telah didapatkan, kemudian memeriksa apakah panjang digit 'kode'
+    tersebut sama dengan 10. Jika tidak sama dengan 10 digit, maka akan menampilkan output tidak valid dan program berhenti (error)
+4. Memeriksa apakah 'kode' berisi angka seperti 0 sampai 9. Jika terdapat karakter selain angka,
+    misalnya huruf, maka akan menampilkan output kode parkir hanya menerima angka dan program berhenti (error)
+5. Setelah itu 'kode' akan dipisah menjadi tiga bagian, yaitu 'kode_kendaraan' untuk digit 1 dan 2, 
+    'kode_waktu' untuk digit 3 sampai 6, serta 'kode_lokasi' untuk digit 7 sampai 10
+6. Menentukan 'jenis_kendaraan' berdasarkan 'kode_kendaraan' (digit 1 dan 2)
+    jika digit 'kode_kendaraan' = "10" maka 'jenis_kendaraan' = "Mobil"
+    jika digit 'kode_kendaraan' = "20" maka 'jenis_kendaraan' = "Motor"
+    jika digit 'kode_kendaraan' = "30" maka 'jenis_kendaraan' = "Bus"
+    jika digit 'kode_kendaraan' selain yang disebutkan, maka akan menampilkan output kode kendaraan tidak valid dan program berhenti (error)
+7. Input jam keluar berupa integer yang akan disimpan pada variabel 'jamKeluar'
+8. Konversi string 'kode_waktu' menjadi integer
+9. Mengubah jamMasuk dan jamKeluar menjadi jam dan menit
+    jamMasukH (jam) = jamMasuk/100 (hasil yang bilangan bulat atau di depan koma)
+    jamMasukM (menit) = jamMasuk%100 (hasil yang di belakang koma)
+    jamKeluarH (jam) = jamKeluar/100
+    jamKeluarM (menit) = jamKeluar%100
+10. Memastikan jam masuk dan jam keluar benar
+    jika 0<jam masuk (jam)<23 atau 0<jam masuk (menit)<59 atau 0<jam keluar (jam)<23 atau 0<jam keluar (menit)<59, maka akan menampilkan
+        output kode jam masuk atau keluar tidak valid dan program berhenti (error)
+11. Menghitung durasi parkir dalam menit dengan rumus total menit = (jam keluar (jam)*60 + jam keluar (menit)) - (jam masuk (jam)*60 + jam masuk (menit))
+    jika total menit<0 maka akan menampilkan output kesalahan menginput jam keluar, karena jam keluar lebih awal dari jam masuk dan program berhenti (error)
+12. Menghitung durasi parkir dalam jam bulat ke atas dengan rumus total jam = total menit/60
+    jika total menit%60 > 0, maka total jam = total jam (sebelumnya) + 1
+13. Menentukan biaya parkir
+    jika jenis_kendaraan = "Mobil" maka jam pertama 5000 dan jam berikutnya 3000
+    jika jenis_kendaraan = "Motor" maka jam pertama 3000 dan jam berikutnya 2000
+    jika jenis_kendaraan = "Bus" maka jam pertama 10000 dan jam berikutnya 7000
+14. Menghitung total biaya parkir dengan rumus total biaya = jam pertama
+    jika total jam>1 maka total biaya = total biaya (sebelumnya) + (totaljam-1)*jamberikutnya
+15. Menampilkan output Ringkasan parkir, seperti jenis kendaraan, waktu masuk, waktu keluar, durasi parkir, lokasi parkir, dan total biaya.
+16. Program selesai */
